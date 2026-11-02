@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "bloodfx",
+  "version": "${version}",
+  "name": "Blood FX",
+  "description": "Client-side blood effects: red blood particles, a different hit colour and a different sound for knockback, critical and sweep sword hits. Everything is configurable in Mod Menu.",
+  "authors": ["kit531"],
+  "contact": {
+    "homepage": "https://github.com/kit531/bloodfx",
+    "sources": "https://github.com/kit531/bloodfx",
+    "issues": "https://github.com/kit531/bloodfx/issues"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.kit531.bloodfx.BloodFxClient"],
+    "modmenu": ["com.kit531.bloodfx.ModMenuIntegration"]
+  },
+  "mixins": ["bloodfx.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "${minecraft_range}",
+    "java": ">=${java_version}",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.kit531.bloodfx.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "ClientPacketListenerMixin",
+    "LivingEntityRenderStateMixin",
+    "LivingEntityRendererMixin",
+    "OverlayTextureMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
