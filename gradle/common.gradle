@@ -54,7 +54,7 @@ jar {
 //     fabric_api_version=...   loader_version=...   modmenu_version=...
 // ---------------------------------------------------------------------------------------
 ext.readMavenMetadata = { String url ->
-    new XmlSlurper().parse(url)
+    new groovy.xml.XmlSlurper().parse(url)
 }
 
 ext.resolveFabricApi = { String mc ->
