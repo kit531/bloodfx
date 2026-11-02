@@ -76,8 +76,17 @@ ext.resolveLoader = {
             .versioning.release.text()
 }
 
+// Mod Menu has one release line per Minecraft version (the newest release is for the newest
+// Minecraft), so the matching version is pinned here. Update this when adding a version.
+ext.modMenuByMinecraft = [
+        '1.21.11': '17.0.1',
+        '26.1.2' : '18.0.2',
+        '26.2'   : '20.0.3',
+        '26.3'   : '21.0.0',
+]
+
 ext.resolveModMenu = {
-    def pinned = project.findProperty('modmenu_version')
+    def pinned = project.findProperty('modmenu_version') ?: project.ext.modMenuByMinecraft[project.minecraft_version]
     if (pinned) return pinned
     readMavenMetadata('https://maven.terraformersmc.com/releases/com/terraformersmc/modmenu/maven-metadata.xml')
             .versioning.release.text()
