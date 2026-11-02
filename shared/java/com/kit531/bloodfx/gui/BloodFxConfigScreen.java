@@ -1,5 +1,6 @@
 package com.kit531.bloodfx.gui;
 
+import com.kit531.bloodfx.Compat;
 import com.kit531.bloodfx.HitType;
 import com.kit531.bloodfx.client.BloodSounds;
 import com.kit531.bloodfx.config.BloodFxConfig;
@@ -40,7 +41,7 @@ public class BloodFxConfigScreen extends Screen {
         BloodFxConfig cfg = BloodFxConfig.get();
         int cx = this.width / 2;
 
-        addRenderableWidget(new StringWidget(cx - 100, 8, 200, 12, this.title, this.font).alignCenter());
+        addRenderableWidget(label(cx, 8, this.title));
 
         // Tabs
         int tabWidth = 62;
@@ -65,6 +66,12 @@ public class BloodFxConfigScreen extends Screen {
 
         addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, b -> this.onClose())
                 .bounds(cx - 100, this.height - 28, 200, 20).build());
+    }
+
+    /** A text line centred on {@code cx}. Sized to the text so it does not depend on widget alignment. */
+    private StringWidget label(int cx, int y, Component text) {
+        int w = this.font.width(text);
+        return new StringWidget(cx - w / 2, y, w, 10, text, this.font);
     }
 
     // ---- General tab -------------------------------------------------------------------
@@ -123,7 +130,7 @@ public class BloodFxConfigScreen extends Screen {
         addRenderableWidget(updateButton);
 
         updateStatus = new StringWidget(cx - 150, y + step * 5 + 24, 300, 10,
-                Component.literal(Updater.statusText()), this.font).alignCenter();
+                Component.literal(Updater.statusText()), this.font);
         addRenderableWidget(updateStatus);
     }
 
@@ -173,8 +180,7 @@ public class BloodFxConfigScreen extends Screen {
     private void buildType(BloodFxConfig cfg, HitType type, int cx) {
         BloodFxConfig.TypeSettings settings = cfg.of(type);
 
-        addRenderableWidget(new StringWidget(cx - 100, 54, 200, 10,
-                Component.literal("Tint colour (hex, e.g. #FF7A00)"), this.font).alignCenter());
+        addRenderableWidget(label(cx, 54, Component.literal("Tint colour (hex, e.g. #FF7A00)")));
 
         EditBox colorBox = new EditBox(this.font, cx - 100, 66, 200, 20, Component.literal("Colour"));
         colorBox.setMaxLength(7);
@@ -188,8 +194,7 @@ public class BloodFxConfigScreen extends Screen {
         addRenderableWidget(colorBox);
 
         if (type == HitType.NORMAL) {
-            addRenderableWidget(new StringWidget(cx - 150, 98, 300, 10,
-                    Component.literal("Normal damage has no extra sound."), this.font).alignCenter());
+            addRenderableWidget(label(cx, 98, Component.literal("Normal damage has no extra sound.")));
             return;
         }
 
@@ -221,7 +226,7 @@ public class BloodFxConfigScreen extends Screen {
     public void onClose() {
         BloodFxConfig.save();
         if (this.minecraft != null) {
-            this.minecraft.setScreen(this.parent);
+            Compat.setScreen(this.minecraft, this.parent);
         }
     }
 
