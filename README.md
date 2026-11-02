@@ -12,11 +12,24 @@ A **client-side** Fabric mod. When a player takes damage you see blood, and ever
 - **Hit colour tint:** the player who was hit is tinted in the colour of the hit instead of vanilla's red flash, and it lasts **twice as long** (20 ticks instead of 10) by default.
 - **Sounds:** every hit type has the vanilla sound plus **4 extra sounds** to choose from (or keep the original), each with its own volume.
 - **Everything is configurable in Mod Menu** (*Mods → Blood FX → config*): particles on/off and amount, sounds on/off and volumes, tint on/off, tint duration, tint brightness, and the colour and sound of every hit type.
+- **Remote updates:** the mod can check this repository's GitHub Releases and update itself (see below).
 - Players only (not mobs).
 
 The mod only needs to be installed on **your** client. It reads the hit type from the vanilla attack sounds the server already sends, so it works on any server.
 
 Settings are stored in `config/bloodfx.json`.
+
+## Remote updates
+
+In Mod Menu (*General* tab) you can set **Updates** to:
+
+- **OFF**: never checks.
+- **NOTIFY**: tells you in chat when a newer release exists; press *Install the update* to download it.
+- **AUTO** (default): downloads the new jar automatically.
+
+The update is downloaded only from this repository's GitHub Releases, for your exact Minecraft version, and is checked (size limit, SHA-256 from GitHub when available, and that the jar really is Blood FX at the announced version) before it is used. The new jar waits in `config/bloodfx/update/` and replaces the old one **when you close the game**, so restart once to get it. If the swap ever fails, the old jar is kept.
+
+Requirements: the repository (or at least its releases) must be **public**, and releases must be published by pushing a tag like `v1.0.1` (the GitHub Actions workflow attaches one jar per Minecraft version). Some mod sites (Modrinth, CurseForge) may not allow self-updating mods, so set the default to NOTIFY or OFF in `BloodFxConfig.updateMode` before publishing there.
 
 ## Supported versions
 
