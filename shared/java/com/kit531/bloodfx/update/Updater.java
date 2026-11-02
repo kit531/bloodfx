@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.kit531.bloodfx.Compat;
 import com.kit531.bloodfx.config.BloodFxConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -155,7 +156,7 @@ public final class Updater {
     }
 
     private static void say(Minecraft mc, String text) {
-        mc.player.displayClientMessage(Component.literal("[Blood FX] " + text), false);
+        Compat.chat(mc, Component.literal("[Blood FX] " + text));
     }
 
     // ---- checking --------------------------------------------------------------------
