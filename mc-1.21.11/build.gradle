@@ -1,0 +1,24 @@
+// Minecraft 1.21.11 is still obfuscated, so this build uses the classic (remapping) Loom.
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+}
+
+apply from: '../gradle/common.gradle'
+
+repositories {
+    maven {
+        name = 'TerraformersMC'
+        url = 'https://maven.terraformersmc.com/releases/'
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    modImplementation "net.fabricmc:fabric-loader:${resolveLoader()}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${resolveFabricApi(minecraft_version)}"
+
+    // Only needed to compile the Mod Menu config-screen entrypoint.
+    modCompileOnly "com.terraformersmc:modmenu:${resolveModMenu()}"
+}
