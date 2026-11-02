@@ -1,0 +1,14 @@
+{
+  "sweep_1": { "sounds": ["bloodfx:sweep_1"] },
+  "sweep_2": { "sounds": ["bloodfx:sweep_2"] },
+  "sweep_3": { "sounds": ["bloodfx:sweep_3"] },
+  "sweep_4": { "sounds": ["bloodfx:sweep_4"] },
+  "crit_1": { "sounds": ["bloodfx:crit_1"] },
+  "crit_2": { "sounds": ["bloodfx:crit_2"] },
+  "crit_3": { "sounds": ["bloodfx:crit_3"] },
+  "crit_4": { "sounds": ["bloodfx:crit_4"] },
+  "knockback_1": { "sounds": ["bloodfx:knockback_1"] },
+  "knockback_2": { "sounds": ["bloodfx:knockback_2"] },
+  "knockback_3": { "sounds": ["bloodfx:knockback_3"] },
+  "knockback_4": { "sounds": ["bloodfx:knockback_4"] }
+}
