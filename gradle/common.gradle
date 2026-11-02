@@ -1,0 +1,84 @@
+// Shared build logic, applied by every mc-<version>/build.gradle AFTER the Loom plugin.
+//
+// Each Minecraft version is its own independent Gradle build (own settings.gradle), so
+// the different Loom versions never share a plugin classpath. They all compile the same
+// shared/ sources, plus one compat-* folder that holds the code that differs per version.
+
+def modProps = new Properties()
+file('../gradle/mod.properties').withInputStream { modProps.load(it) }
+
+group = 'com.kit531'
+version = "${modProps.getProperty('mod_version')}+mc${project.minecraft_version}"
+
+base {
+    archivesName = modProps.getProperty('mod_id')
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['../shared/java', "../${project.compat_dir}/java"]
+        resources.srcDirs = ['../shared/resources']
+    }
+}
+
+java {
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = Integer.parseInt(project.java_version)
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'minecraft_range', project.minecraft_range
+    inputs.property 'java_version', project.java_version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version,
+               'minecraft_range': project.minecraft_range,
+               'java_version': project.java_version
+    }
+}
+
+jar {
+    from('../LICENSE') {
+        rename { "${it}_${modProps.getProperty('mod_id')}" }
+    }
+}
+
+// ---------------------------------------------------------------------------------------
+// Dependency version lookup. Fabric API / Loader / Mod Menu are resolved from the Maven
+// metadata at configure time so the build always picks a version that really exists.
+// Override any of them in the version's gradle.properties:
+//     fabric_api_version=...   loader_version=...   modmenu_version=...
+// ---------------------------------------------------------------------------------------
+ext.readMavenMetadata = { String url ->
+    new XmlSlurper().parse(url)
+}
+
+ext.resolveFabricApi = { String mc ->
+    def pinned = project.findProperty('fabric_api_version')
+    if (pinned) return pinned
+    def xml = readMavenMetadata('https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml')
+    def matches = xml.versioning.versions.version.collect { it.text() }.findAll { it.endsWith('+' + mc) }
+    if (matches.isEmpty()) {
+        throw new GradleException("No Fabric API build found for Minecraft ${mc}. " +
+                "Set fabric_api_version in ${project.name}/gradle.properties.")
+    }
+    return matches.last()
+}
+
+ext.resolveLoader = {
+    def pinned = project.findProperty('loader_version')
+    if (pinned) return pinned
+    readMavenMetadata('https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml')
+            .versioning.release.text()
+}
+
+ext.resolveModMenu = {
+    def pinned = project.findProperty('modmenu_version')
+    if (pinned) return pinned
+    readMavenMetadata('https://maven.terraformersmc.com/releases/com/terraformersmc/modmenu/maven-metadata.xml')
+            .versioning.release.text()
+}
