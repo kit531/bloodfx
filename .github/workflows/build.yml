@@ -30,7 +30,42 @@ jobs:
       - name: Build ${{ matrix.mc }}
         run: |
           chmod +x gradlew
-          ./gradlew -p mc-${{ matrix.mc }} build --stacktrace
+          ./gradlew -p mc-${{ matrix.mc }} build
+
+      # Only when the build fails: print the real method names of the Minecraft classes the mod
+      # touches, so a failed build can be fixed against the actual API of that version.
+      - name: API dump
+        if: failure()
+        run: |
+          CP=""
+          for j in $(find ~/.gradle -name '*.jar' -size +3M 2>/dev/null); do
+            if unzip -l "$j" 2>/dev/null | grep -q ' net/minecraft/client/Minecraft.class'; then
+              CP="$CP:$j"
+            fi
+          done
+          echo "classpath jars: $CP"
+          dump() {
+            echo "=== $1"
+            javap -p -cp "$CP" "$1" 2>&1 | grep -iE "$2" | head -n 70
+          }
+          dump net.minecraft.client.Minecraft 'screen'
+          dump net.minecraft.client.gui.components.StringWidget '.'
+          dump net.minecraft.client.gui.components.AbstractStringWidget '.'
+          dump net.minecraft.client.gui.screens.Screen 'close|minecraft|font|render|extract|init\(|tick|class'
+          dump net.minecraft.world.level.Level 'random|class'
+          dump net.minecraft.client.particle.Particle 'color|col|alpha|class|scale|lifetime|gravity|quad'
+          dump net.minecraft.client.particle.SingleQuadParticle 'color|col|alpha|class|scale'
+          dump net.minecraft.client.player.LocalPlayer 'message|chat|class'
+          dump net.minecraft.world.entity.player.Player 'message|chat|class'
+          dump net.minecraft.world.entity.Entity 'sendSystemMessage|message'
+          dump net.minecraft.client.gui.Gui 'chat|message|class'
+          dump net.minecraft.client.gui.components.ChatComponent 'addMessage|addRecent|class'
+          dump net.minecraft.client.particle.ParticleEngine 'createParticle|add|class'
+          dump net.minecraft.client.renderer.entity.LivingEntityRenderer 'extractRenderState|getOverlayCoords|isWhite|class'
+          dump net.minecraft.client.renderer.entity.state.LivingEntityRenderState '.'
+          dump net.minecraft.client.renderer.texture.OverlayTexture '.'
+          dump net.minecraft.client.multiplayer.ClientPacketListener 'handleSoundEvent|handleSound'
+          dump net.minecraft.client.resources.sounds.SimpleSoundInstance 'forUI|forMusic|class'
 
       - uses: actions/upload-artifact@v4
         with:
