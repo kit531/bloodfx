@@ -55,7 +55,7 @@ mc-<version>/  one independent Gradle build per Minecraft version
 gradle/        shared build script and the wrapper
 ```
 
-Fabric API, Fabric Loader and Mod Menu versions are looked up automatically while building. To pin one, set `fabric_api_version`, `loader_version` or `modmenu_version` in that version's `gradle.properties`. `loom_version` in the same file is the Fabric Loom version and is the first thing to change if a plugin can't be resolved.
+Fabric API and Fabric Loader versions are looked up automatically while building. Mod Menu has one release line per Minecraft version, so the matching one is pinned in `gradle/common.gradle` (`modMenuByMinecraft`). To override any of them, set `fabric_api_version`, `loader_version` or `modmenu_version` in that version's `gradle.properties`. `loom_version` in the same file is the Fabric Loom version and is the first thing to change if a plugin can't be resolved.
 
 ## Sounds
 
