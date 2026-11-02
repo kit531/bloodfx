@@ -45,7 +45,7 @@ public final class BloodSounds {
         if (event == null || volume <= 0.0f) {
             return;
         }
-        float pitch = 0.95f + level.random.nextFloat() * 0.10f;
+        float pitch = 0.95f + level.getRandom().nextFloat() * 0.10f;
         level.playLocalSound(x, y, z, event, SoundSource.PLAYERS, volume, pitch, false);
     }
 

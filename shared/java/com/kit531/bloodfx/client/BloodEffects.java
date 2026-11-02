@@ -1,5 +1,6 @@
 package com.kit531.bloodfx.client;
 
+import com.kit531.bloodfx.Compat;
 import com.kit531.bloodfx.HitType;
 import com.kit531.bloodfx.config.BloodFxConfig;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,7 @@ public final class BloodEffects {
             return;
         }
 
-        RandomSource rnd = level.random;
+        RandomSource rnd = level.getRandom();
 
         // Direction the blood flies: away from the attacker, or random when unknown.
         double dirX;
@@ -114,7 +115,7 @@ public final class BloodEffects {
                 // Vanilla particle constructors add random jitter to the velocity; set the exact one afterwards.
                 particle.setParticleSpeed(vx, vy, vz);
                 float shade = 0.65f + rnd.nextFloat() * 0.35f;
-                particle.setColor(shade, shade, shade);
+                Compat.setParticleColor(particle, shade, shade, shade);
                 particle.scale(0.7f + rnd.nextFloat() * 0.5f);
                 engine.add(particle);
             }
